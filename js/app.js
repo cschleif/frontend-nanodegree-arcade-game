@@ -1,3 +1,10 @@
+// Initialize game variables
+var score = 0;
+var lives = 3;
+var level = 0;
+
+
+// Class constructor for Enemy
 var Enemy = function(x, y, speed) {
     this.x = x;
     this.y = y;
@@ -16,7 +23,7 @@ var Enemy = function(x, y, speed) {
 //Update enemy posiiton
 Enemy.prototype.update = function(dt) {
     if(this.x < 500){
-        this.x += dt * this.speed;
+        this.x += (dt) * this.speed;
     }
     else {
         this.x = -200;
@@ -40,8 +47,17 @@ var Player = function(x, y) {
 
 //Update player position once player reaches water
 Player.prototype.update = function(dt) {
+    //Ensure game runs at same speed on all computers.
+    this.x *( dt);
+    this.y * (dt);
+
+    //Reset player when reaches water
     if (this.y <= 0){
-        this.reset(202,400);
+        this.reset();
+        level = level + 1;
+        score = score + 10;
+        document.getElementById("level").innerHTML = "Level: " + level;
+        document.getElementById("score").innerHTML = "Score: " + score;
     }
 };
 
@@ -75,7 +91,13 @@ new Enemy(-200, 230, 225)
 //Instantiates player
 var player = new Player(202, 400);
 
+var win = function() {
+    confirm("You won!");
+};
 
+var lost = function() {
+    confirm("You lost!");
+};
 
 //Resets player
 Player.prototype.reset = function(x, y) {
@@ -83,6 +105,11 @@ Player.prototype.reset = function(x, y) {
     this.y = y;
 };
 
+// Player loses life
+Player.prototype.lives = function() {
+    lives = lives - 1;
+    document.getElementById("lives").innerHTML = "Lives left: " + lives;
+};
 
 //Collision
 function checkCollisions(allEnemies, player) {
@@ -90,11 +117,17 @@ function checkCollisions(allEnemies, player) {
         if (allEnemies[i].x < player.x + player.width &&
             allEnemies[i].x + allEnemies[i].width > player.x &&
             allEnemies[i].y < player.y + player.height &&
-            allEnemies[i].height + allEnemies[i].y > player.y) {
-            player.reset(200, 400);
+            allEnemies[i].height + allEnemies[i].y > player.y){
+            player.reset(202, 400);
+            lives = lives - 1;
+            document.getElementById("lives").innerHTML = "Lives: " + lives;
+            if (lives < 0) {
+                reset();
+            }
+            document.getElementById("lives").innerHTML = "Lives: " + lives;
         }
     }
-}
+};
 
 
 //Listens for key presses
