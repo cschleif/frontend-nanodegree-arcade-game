@@ -1,3 +1,4 @@
+
 // Initialize game variables
 var score = 0;
 var lives = 3;
@@ -48,11 +49,11 @@ var Player = function(x, y) {
 //Update player position once player reaches water
 Player.prototype.update = function(dt) {
     //Ensure game runs at same speed on all computers.
-    this.x *( dt);
+    this.x * (dt);
     this.y * (dt);
 
     //Reset player when reaches water
-    if (this.y <= 0){
+    if (this.y < 0){
         this.reset();
         level = level + 1;
         score = score + 10;
@@ -91,23 +92,17 @@ new Enemy(-200, 230, 225)
 //Instantiates player
 var player = new Player(202, 400);
 
-var win = function() {
-    confirm("You won!");
-};
 
-var lost = function() {
-    confirm("You lost!");
-};
 
 //Resets player
-Player.prototype.reset = function(x, y) {
-    this.x = x;
-    this.y = y;
+Player.prototype.reset = function() {
+    this.x = 202;
+    this.y = 400;
 };
 
 // Player loses life
 Player.prototype.lives = function() {
-    lives = lives - 1;
+   lives = lives - 1;
     document.getElementById("lives").innerHTML = "Lives left: " + lives;
 };
 
@@ -120,11 +115,13 @@ function checkCollisions(allEnemies, player) {
             allEnemies[i].height + allEnemies[i].y > player.y){
             player.reset(202, 400);
             lives = lives - 1;
+         }
             document.getElementById("lives").innerHTML = "Lives: " + lives;
-            if (lives < 0) {
-                reset();
-            }
-            document.getElementById("lives").innerHTML = "Lives: " + lives;
+        if (lives < 0) {
+                confirm("Game Over!");
+        }
+        if (lives < 0) {
+                return lives = 3;
         }
     }
 };
